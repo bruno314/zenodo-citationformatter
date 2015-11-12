@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # This file is part of Zenodo.
-# Copyright (C) 2015 CERN.
+# Copyright (C) 2014, 2015 CERN.
 #
 # Zenodo is free software; you can redistribute it
 # and/or modify it under the terms of the GNU General Public License as
@@ -22,24 +22,49 @@
 # waive the privileges and immunities granted to it by virtue of its status
 # as an Intergovernmental Organization or submit itself to any jurisdiction.
 
-"""Proxy for DOI citation formatter."""
+"""."""
 
-from __future__ import absolute_import, print_function
-
-from flask import Blueprint, render_template
-from flask_babelex import gettext as _
+import requests
+from flask import Blueprint, request, current_app, abort
+from idutils import is_doi
 
 blueprint = Blueprint(
     'zenodo_citationformatter',
     __name__,
-    template_folder='templates',
-    static_folder='static',
+    url_prefix="/citeproc",
+    static_folder="static",
+    template_folder="templates",
 )
 
 
-@blueprint.route("/")
-def index():
-    """Basic view."""
-    return render_template(
-        "zenodo_citationformatter/index.html",
-        module_name=_('Zenodo-CitationFormatter'))
+@blueprint.route('/format', methods=['GET'])
+def format():
+    """."""
+    doi = request.args.get('doi', '')
+    lang = request.args.get(
+        'lang', current_app.config['CITATIONFORMATTER_DEFAULT_LANG'])
+    style = request.args.get(
+        'style', current_app.config['CITATIONFORMATTER_DEFAULT_STYLE'])
+
+    # Abort early on invalid DOI.
+    if not is_doi(doi):
+        abort(404, "DOI not found.")
+    if lang not in current_app.config['CITATIONFORMATTER_LANGS']:
+        abort(404, "Language not found.")
+    if style not in current_app.config['CITATIONFORMATTER_STYLES']:
+        abort(404, "Style not found.")
+
+    r = requests.get(
+        current_app.config['CITATIONFORMATTER_API'],
+        params=dict(
+            doi=doi,
+            lang=lang,
+            style=style,
+        )
+    )
+    r.encoding = 'utf-8'
+
+    if r.status_code == 200:
+        return (r.text, 200, [('content-type', 'text/plain')])
+    else:
+        abort(404, "DOI not found")

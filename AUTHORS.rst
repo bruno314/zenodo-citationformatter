@@ -27,4 +27,5 @@ Authors
 
 Proxy for DOI citation formatter.
 
-- CERN <info@zenodo.org>
+- Lars Holm Nielsen <lars.holm.nielsen@cern.ch>
+- Adrian Pawel Baran <adrian.pawel.baran@cern.ch>

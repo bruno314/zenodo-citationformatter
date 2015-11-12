@@ -1,8 +1,8 @@
 =================================
- Zenodo-CitationFormatter v0.1.0
+ Zenodo-CitationFormatter v1.0.0
 =================================
 
-Zenodo-CitationFormatter v0.1.0 was released on TBD, 2015.
+Zenodo-CitationFormatter v1.0.0 was released on TBD, 2015.
 
 About
 -----
@@ -19,7 +19,7 @@ What's new
 Installation
 ------------
 
-   $ pip install zenodo-citationformatter==0.1.0
+   $ pip install zenodo-citationformatter==1.0.0
 
 Documentation
 -------------
