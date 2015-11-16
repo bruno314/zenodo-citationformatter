@@ -25,8 +25,12 @@
 """."""
 
 import requests
-from flask import Blueprint, request, current_app, abort
-from idutils import is_doi
+from flask import Blueprint, abort, current_app, request
+# from idutils import is_doi
+
+
+def is_doi(*args, **kwargs):
+    return True #TODO replace idutils
 
 blueprint = Blueprint(
     'zenodo_citationformatter',

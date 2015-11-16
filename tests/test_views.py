@@ -27,77 +27,73 @@
 from __future__ import absolute_import
 
 from flask import url_for
+from zenodo_citationformatter.views import blueprint
 import httpretty
-from invenio.testsuite import InvenioTestCase, make_test_suite, \
-    run_test_suite
 
 
-class CitationFormatterTest(InvenioTestCase):
-
-    """Test citationformatter."""
-
-    @property
-    def config(self):
-        return dict(
-            # HTTPretty doesn't play well with Redis.
-            # See gabrielfalcao/HTTPretty#110
-            CACHE_TYPE='simple',
-            CITATIONFORMATTER_API='http://example.org/citeproc/format'
-        )
-
-    @httpretty.activate
-    def test_format(self):
-        httpretty.register_uri(
-            httpretty.GET,
-            self.app.config['CITATIONFORMATTER_API'],
-            body='my formatted citation',
-            content_type="text/plain"
-        )
-
-        r = self.client.get(
-            url_for('zenodo_citationformatter.format',
-                    doi='10.1234/foo.bar', lang='en-US', style='apa')
-        )
-        self.assert200(r)
-        self.assertEqual(r.data, 'my formatted citation')
-
-    def test_format_invalid_params(self):
-        r = self.client.get(
-            url_for('zenodo_citationformatter.format',
-                    doi='invalid-doi', lang='en-US', style='apa')
-        )
-        self.assert404(r)
-
-        r = self.client.get(
-            url_for('zenodo_citationformatter.format',
-                    doi='10.1234/foo.bar', lang='invalidlocale', style='apa')
-        )
-        self.assert404(r)
-
-        r = self.client.get(
-            url_for('zenodo_citationformatter.format',
-                    doi='10.1234/foo.bar', lang='en-US', style='invalidstyle')
-        )
-        self.assert404(r)
-
-    @httpretty.activate
-    def test_format_api_notfound(self):
-        httpretty.register_uri(
-            httpretty.GET,
-            self.app.config['CITATIONFORMATTER_API'],
-            body='DOI not found',
-            content_type="text/plain",
-            status=404,
-        )
-
-        r = self.client.get(
-            url_for('zenodo_citationformatter.format',
-                    doi='10.1234/foo.bar', lang='en-US', style='apa')
-        )
-        self.assert404(r)
 
 
-TEST_SUITE = make_test_suite(CitationFormatterTest)
+def test_format(app):
+    app.config['CACHE_TYPE'] = 'simple'
+    app.config['CITATIONFORMATTER_API'] = 'http://example.org/citeproc/format'
 
-if __name__ == "__main__":
-    run_test_suite(TEST_SUITE)
+    app.register_blueprint(blueprint)
+
+    httpretty.enable()
+    httpretty.register_uri(
+        httpretty.GET,
+        app.config['CITATIONFORMATTER_API'],
+        body='my formatted citation',
+        content_type="text/plain"
+    )
+
+    # for rule in app.url_map.iter_rules():
+    #     print (str(rule)+"==="+rule.endpoint)
+    # assert False
+    with app.test_client() as client:
+        with app.app_context() as apc:
+            r = client.get(
+                    url_for('zenodo_citationformatter.format',
+                        doi='10.1234/foo.bar', lang='en-US', style='apa')
+
+            )
+            assert r.status_code == 200
+            assert r.data == 'my formatted citation'
+
+#
+# def test_format_invalid_params(app):
+#     r = self.client.get(
+#         url_for('zenodo_citationformatter.format',
+#                 doi='invalid-doi', lang='en-US', style='apa')
+#     )
+#     self.assert404(r)
+#
+#     r = self.client.get(
+#         url_for('zenodo_citationformatter.format',
+#                 doi='10.1234/foo.bar', lang='invalidlocale', style='apa')
+#     )
+#     self.assert404(r)
+#
+#     r = self.client.get(
+#         url_for('zenodo_citationformatter.format',
+#                 doi='10.1234/foo.bar', lang='en-US', style='invalidstyle')
+#     )
+#     self.assert404(r)
+#
+#
+# @httpretty.activate
+# def test_format_api_notfound(app):
+#     httpretty.register_uri(
+#         httpretty.GET,
+#         self.app.config['CITATIONFORMATTER_API'],
+#         body='DOI not found',
+#         content_type="text/plain",
+#         status=404,
+#     )
+#
+#     r = self.client.get(
+#         url_for('zenodo_citationformatter.format',
+#                 doi='10.1234/foo.bar', lang='en-US', style='apa')
+#     )
+#     self.assert404(r)
+
