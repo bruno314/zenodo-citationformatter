@@ -25,7 +25,7 @@
 """."""
 
 import requests
-from flask import Blueprint, request, current_app, abort
+from flask import Blueprint, abort, current_app, request
 from idutils import is_doi
 
 blueprint = Blueprint(
@@ -48,7 +48,7 @@ def format():
 
     # Abort early on invalid DOI.
     if not is_doi(doi):
-        abort(404, "DOI not found.")
+        abort(404, "DOI not found.{}.".format(doi))
     if lang not in current_app.config['CITATIONFORMATTER_LANGS']:
         abort(404, "Language not found.")
     if style not in current_app.config['CITATIONFORMATTER_STYLES']:

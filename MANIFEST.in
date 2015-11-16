@@ -51,3 +51,7 @@ recursive-include docs Makefile
 recursive-include examples *.py
 recursive-include tests *.py
 recursive-include zenodo_citationformatter *.html
+# recursive-include tests *.js
+include tests/js/citationformatterspec.js
+recursive-include zenodo_citationformatter *.js
+recursive-include spec *.yml

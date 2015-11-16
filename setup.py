@@ -42,6 +42,7 @@ tests_require = [
     'pytest-cov>=1.8.0',
     'pytest-pep8>=1.0.6',
     'pytest>=2.8.0',
+    'jasmine>=2.3.0'
 ]
 
 extras_require = {
@@ -61,6 +62,9 @@ setup_requires = [
 
 install_requires = [
     'Flask-BabelEx>=0.9.2',
+    'idutils>=0.1.1',
+    'requests>=2.5.0',
+    'httpretty>=0.8.10',
 ]
 
 packages = find_packages()
