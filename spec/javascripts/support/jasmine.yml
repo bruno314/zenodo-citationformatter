@@ -38,7 +38,17 @@ stylesheets:
 #   - helpers/**/*.js
 #
 helpers:
-  - "helpers/**/*.js"
+  - "helpers/require.js"
+#  - "helpers/jquery.js"
+#  - "helpers/jasmine-html.js"
+#  - "helpers/jasmine-html.js"
+#  - "helpers/flight.min.js"
+#  - "helpers/jasmine.js"
+#  - "helpers/jasmine-ajax.js"
+#  - "helpers/jasmine-jquery.js"
+#  - "helpers/jasmine-flight.js"
+#  - "helpers/jquery-mockajax.js"
+#  - "helpers/boot.js"
 
 # spec_files
 #

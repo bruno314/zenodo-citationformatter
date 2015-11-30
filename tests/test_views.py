@@ -45,7 +45,8 @@ def test_format(app):
     )
 
     with app.app_context():
-        url = url_for('zenodo_citationformatter.format')
+        with app.test_request_context():
+            url = url_for('zenodo_citationformatter.format')
 
     with app.test_client() as client:
         r = client.get(url, query_string=dict(
@@ -60,7 +61,8 @@ def test_format_invalid_params(app):
 
     ext = ZenodoCitationFormatter(app)
     with app.app_context():
-        url = url_for('zenodo_citationformatter.format')
+        with app.test_request_context():
+            url = url_for('zenodo_citationformatter.format')
 
     with app.test_client() as client:
         r = client.get(url, query_string=dict(
@@ -84,7 +86,8 @@ def test_format_api_notfound(app):
 
     ext = ZenodoCitationFormatter(app)
     with app.app_context():
-        url = url_for('zenodo_citationformatter.format')
+        with app.test_request_context():
+            url = url_for('zenodo_citationformatter.format')
 
     with app.test_client() as client:
         httpretty.enable()

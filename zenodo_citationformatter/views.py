@@ -48,7 +48,7 @@ def format():
 
     # Abort early on invalid DOI.
     if not is_doi(doi):
-        abort(404, "DOI not found.{}.".format(doi))
+        abort(404, "DOI not found.")
     if lang not in current_app.config['CITATIONFORMATTER_LANGS']:
         abort(404, "Language not found.")
     if style not in current_app.config['CITATIONFORMATTER_STYLES']:

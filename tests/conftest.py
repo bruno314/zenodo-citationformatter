@@ -28,7 +28,7 @@
 from __future__ import absolute_import, print_function
 
 import pytest
-from flask import Flask
+from flask import Flask, url_for
 
 from zenodo_citationformatter.views import blueprint
 
@@ -37,12 +37,12 @@ from zenodo_citationformatter.views import blueprint
 def app():
     """Flask application fixture."""
     app = Flask('testapp')
+    app.register_blueprint(blueprint)
+
     app.config.update(
         TESTING=True,
-        SERVER_NAME="127.0.0.1:5000"
     )
 
-    app.register_blueprint(blueprint)
     app.config['CACHE_TYPE'] = 'simple'
     app.config['CITATIONFORMATTER_API'] = 'http://example.org/citeproc/format'
 

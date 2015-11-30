@@ -52,17 +52,3 @@ def test_init():
     assert 'zenodo-citationformatter' not in app.extensions
     ext.init_app(app)
     assert 'zenodo-citationformatter' in app.extensions
-
-# No args returns 404, this may be obsolete
-# def test_view(app):
-#     """Test view."""
-#     Babel(app)
-#     ZenodoCitationFormatter(app)
-#
-#     with app.app_context():
-#         url = url_for('zenodo_citationformatter.format')
-#
-#     with app.test_client() as client:
-#         res = client.get(url)
-#         assert res.status_code == 200
-#         assert 'Welcome to Zenodo-CitationFormatter' in str(res.data)
